@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirámide de Bronfenbrenner · Fundación 99</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f4f4;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+        }
+
+        /* Encabezado */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .logo-placeholder {
+            background: #1a1a1a;
+            color: #f5c542;
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 10px 22px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            border: 2px solid #f5c542;
+        }
+
+        .logo-placeholder span {
+            color: #ffffff;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .subtitulo {
+            color: #555555;
+            font-weight: 400;
+            font-size: 1rem;
+            margin-top: -4px;
+            margin-bottom: 28px;
+            border-left: 4px solid #f5c542;
+            padding-left: 16px;
+            background: #fcfcfc;
+            border-radius: 0 8px 8px 0;
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
+            border-left-width: 6px;
+        }
+
+        /* Área de añadir actores */
+        .input-area {
+            background: #ffffff;
+            padding: 18px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            border: 1px solid #d0d0d0;
+        }
+
+        .input-area label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+        }
+
+        .input-area input {
+            flex: 1 1 200px;
+            padding: 12px 18px;
+            border: 2px solid #cccccc;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fafafa;
+        }
+
+        .input-area input:focus {
+            outline: none;
+            border-color: #f5c542;
+            box-shadow: 0 0 0 3px rgba(245, 197, 66, 0.25);
+        }
+
+        .input-area button {
+            background: #1a1a1a;
+            border: none;
+            color: #f5c542;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            letter-spacing: 0.3px;
+            border: 2px solid #f5c542;
+        }
+
+        .input-area button:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        .input-area button:active {
+            transform: scale(0.97);
+        }
+
+        /* Actores disponibles */
+        .pool-container {
+            background: #ffffff;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 28px;
+            border: 1px solid #d0d0d0;
+        }
+
+        .pool-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .pool-title span {
+            background: #eaeaea;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #1a1a1a;
+        }
+
+        .actor-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 50px;
+            padding: 6px 0;
+        }
+
+        .actor-card {
+            background: #f0f0f0;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            cursor: grab;
+            user-select: none;
+            border: 2px solid transparent;
+            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .actor-card:active {
+            cursor: grabbing;
+        }
+
+        .actor-card.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .actor-card:hover {
+            background: #e2e2e2;
+            border-color: #f5c542;
+        }
+
+        .mensaje-vacio {
+            color: #999999;
+            font-style: italic;
+            font-size: 0.9rem;
+            padding: 6px 0;
+        }
+
+        /* Pirámide */
+        .piramide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .nivel {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 100%;
+            border: 3px dashed #cccccc;
+            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            min-height: 80px;
+        }
+
+        .nivel.drag-over {
+            background: #fff9e6;
+            border-color: #f5c542;
+            box-shadow: 0 0 0 4px rgba(245, 197, 66, 0.15);
+        }
+
+        .nivel-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .nivel-label small {
+            font-weight: 400;
+            color: #777777;
+            font-size: 0.8rem;
+        }
+
+        .nivel-contenido {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 36px;
+        }
+
+        .nivel-contenido .actor-card {
+            background: #f5f0e0;
+            border-color: #f5c542;
+            cursor: grab;
+        }
+
+        .nivel-contenido .actor-card:hover {
+            background: #ece3c5;
+            border-color: #d4a830;
+        }
+
+        /* Anchos de niveles */
+        .nivel-micro { width: 100%; border-color: #1a1a1a; }
+        .nivel-micro .nivel-label { color: #1a1a1a; }
+
+        .nivel-meso { width: 86%; border-color: #f5c542; }
+        .nivel-meso .nivel-label { color: #b88f2a; }
+
+        .nivel-exo { width: 72%; border-color: #888888; }
+        .nivel-exo .nivel-label { color: #555555; }
+
+        .nivel-macro { width: 58%; border-color: #555555; }
+        .nivel-macro .nivel-label { color: #333333; }
+
+        .nivel-crono { width: 44%; border-color: #aaaaaa; }
+        .nivel-crono .nivel-label { color: #666666; }
+
+        /* Botones */
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 6px;
+        }
+
+        .acciones button {
+            background: #ffffff;
+            border: 2px solid #cccccc;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .acciones button:hover {
+            background: #f5f5f5;
+            border-color: #f5c542;
+        }
+
+        .acciones .reiniciar {
+            background: #1a1a1a;
+            border-color: #1a1a1a;
+            color: #f5c542;
+        }
+
+        .acciones .reiniciar:hover {
+            background: #333333;
+            border-color: #f5c542;
+            color: #ffffff;
+        }
+
+        .acciones .vaciar {
+            background: #fafafa;
+            border-color: #d0d0d0;
+        }
+
+        .acciones .vaciar:hover {
+            background: #f0f0f0;
+            border-color: #f5c542;
+        }
+
+        .footer-note {
+            margin-top: 22px;
+            color: #777777;
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .header { flex-direction: column; align-items: flex-start; }
+            .logo-placeholder { font-size: 1rem; padding: 8px 16px; }
+            h1 { font-size: 1.4rem; }
+            .subtitulo { font-size: 0.9rem; padding: 8px 14px; }
+            .input-area { flex-direction: column; align-items: stretch; padding: 16px; }
+            .input-area input { flex: 1; }
+            .input-area button { width: 100%; }
+            .nivel { padding: 12px 16px; min-height: 65px; }
+            .nivel-micro { width: 100%; }
+            .nivel-meso { width: 92%; }
+            .nivel-exo { width: 84%; }
+            .nivel-macro { width: 76%; }
+            .nivel-crono { width: 68%; }
+            .acciones button { flex: 1 1 auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="logo-placeholder">
+            FUNDACIÓN <span>99</span>
+        </div>
+        <h1>Modelo Ecológico de Bronfenbrenner</h1>
+    </div>
+    <div class="subtitulo">
+        Identifica actores reales de tu comunidad y ubícalos en el nivel que mejor represente su influencia.
+    </div>
+
+    <div class="input-area">
+        <label for="actorInput">Nuevo actor</label>
+        <input type="text" id="actorInput" placeholder="Ej. maestro, alcalde, iglesia, familia..." />
+        <button id="agregarBtn">Agregar</button>
+    </div>
+
+    <div class="pool-container">
+        <div class="pool-title">
+            <span>Actores disponibles</span>
+            <span id="contadorPool">0</span>
+        </div>
+        <div class="actor-pool" id="actorPool">
+            <span class="mensaje-vacio">Aún no hay actores. Agrega uno arriba.</span>
+        </div>
+    </div>
+
+    <div class="piramide" id="piramide">
+
+        <div class="nivel nivel-crono" data-nivel="crono" id="drop-crono">
+            <div class="nivel-label">
+                <span>Cronosistema</span>
+                <small>Cambios a lo largo del tiempo</small>
+            </div>
+            <div class="nivel-contenido" id="contenido-crono"></div>
+        </div>
+
+        <div class="nivel nivel-macro" data-nivel="macro" id="drop-macro">
+            <div class="nivel-label">
+                <span>Macrosistema</span>
+                <small>Cultura, ideología, políticas</small>
+            </div>
+            <div class="nivel-contenido" id="contenido-macro"></div>
+        </div>
+
+        <div class="nivel nivel-exo" data-nivel="exo" id="drop-exo">
+            <div class="nivel-label">
+                <span>Exosistema</span>
+                <small>Entornos indirectos</small>
+            </div>
+            <div class="nivel-contenido" id="contenido-exo"></div>
+        </div>
+
+        <div class="nivel nivel-meso" data-nivel="meso" id="drop-meso">
+            <div class="nivel-label">
+                <span>Mesosistema</span>
+                <small>Interacciones entre microsistemas</small>
+            </div>
+            <div class="nivel-contenido" id="contenido-meso"></div>
+        </div>
+
+        <div class="nivel nivel-micro" data-nivel="micro" id="drop-micro">
+            <div class="nivel-label">
+                <span>Microsistema</span>
+                <small>Entorno más cercano</small>
+            </div>
+            <div class="nivel-contenido" id="contenido-micro"></div>
+        </div>
+
+    </div>
+
+    <div class="acciones">
+        <button id="reiniciarBtn" class="reiniciar">Reiniciar actividad</button>
+        <button id="vaciarPoolBtn" class="vaciar">Vaciar disponibles</button>
+    </div>
+
+    <div class="footer-note">
+        Arrastra los actores desde la lista de disponibles hasta el nivel que consideres adecuado.
+        También puedes moverlos entre niveles o devolverlos a la lista.
+    </div>
+</div>
+
+<script>
+    (function() {
+        const actorInput = document.getElementById('actorInput');
+        const agregarBtn = document.getElementById('agregarBtn');
+        const actorPool = document.getElementById('actorPool');
+        const contadorPool = document.getElementById('contadorPool');
+
+        const contenedores = {
+            micro: document.getElementById('contenido-micro'),
+            meso: document.getElementById('contenido-meso'),
+            exo: document.getElementById('contenido-exo'),
+            macro: document.getElementById('contenido-macro'),
+            crono: document.getElementById('contenido-crono')
+        };
+
+        const dropZones = {
+            micro: document.getElementById('drop-micro'),
+            meso: document.getElementById('drop-meso'),
+            exo: document.getElementById('drop-exo'),
+            macro: document.getElementById('drop-macro'),
+            crono: document.getElementById('drop-crono')
+        };
+
+        let actorIdCounter = 0;
+
+        function actualizarContadorPool() {
+            const cards = actorPool.querySelectorAll('.actor-card');
+            const count = cards.length;
+            contadorPool.textContent = count;
+            const mensaje = actorPool.querySelector('.mensaje-vacio');
+            if (count === 0) {
+                if (!mensaje) {
+                    const span = document.createElement('span');
+                    span.className = 'mensaje-vacio';
+                    span.textContent = 'Aún no hay actores. Agrega uno arriba.';
+                    actorPool.appendChild(span);
+                }
+            } else {
+                if (mensaje) mensaje.remove();
+            }
+        }
+
+        function crearActorCard(nombre) {
+            const card = document.createElement('div');
+            card.className = 'actor-card';
+            card.textContent = nombre;
+            card.draggable = true;
+            card.dataset.id = actorIdCounter++;
+            card.dataset.nombre = nombre;
+
+            card.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text/plain', this.dataset.id);
+                e.dataTransfer.setData('nombre', this.dataset.nombre);
+                const parent = this.parentNode;
+                let origen = 'pool';
+                if (parent.id && parent.id.startsWith('contenido-')) {
+                    origen = 'nivel';
+                }
+                e.dataTransfer.setData('origen', origen);
+                if (origen === 'nivel') {
+                    const nivelId = parent.id.replace('contenido-', '');
+                    e.dataTransfer.setData('nivelOrigen', nivelId);
+                }
+                this.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', function(e) {
+                this.classList.remove('dragging');
+            });
+
+            return card;
+        }
+
+        function agregarActor(nombre) {
+            const trimmed = nombre.trim();
+            if (!trimmed) {
+                alert('Por favor, escribe el nombre del actor.');
+                return;
+            }
+            const mensaje = actorPool.querySelector('.mensaje-vacio');
+            if (mensaje) mensaje.remove();
+
+            const card = crearActorCard(trimmed);
+            actorPool.appendChild(card);
+            actualizarContadorPool();
+            actorInput.value = '';
+            actorInput.focus();
+        }
+
+        function moverCard(card, contenedorDestino) {
+            if (contenedorDestino === actorPool) {
+                const mensaje = actorPool.querySelector('.mensaje-vacio');
+                if (mensaje) mensaje.remove();
+                actorPool.appendChild(card);
+            } else {
+                contenedorDestino.appendChild(card);
+            }
+            actualizarContadorPool();
+        }
+
+        function configurarDropZones() {
+            for (let [nivelId, dropZone] of Object.entries(dropZones)) {
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                });
+
+                dropZone.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over');
+                });
+
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+
+                    const id = e.dataTransfer.getData('text/plain');
+                    const card = document.querySelector(`.actor-card[data-id="${id}"]`);
+                    if (!card) return;
+
+                    const nivelDestino = this.dataset.nivel;
+                    const contenedorDestino = contenedores[nivelDestino];
+                    if (card.parentNode === contenedorDestino) return;
+
+                    moverCard(card, contenedorDestino);
+                });
+            }
+        }
+
+        function configurarPoolDrop() {
+            actorPool.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+
+            actorPool.addEventListener('dragleave', function(e) {
+                this.classList.remove('drag-over');
+            });
+
+            actorPool.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+
+                const id = e.dataTransfer.getData('text/plain');
+                const card = document.querySelector(`.actor-card[data-id="${id}"]`);
+                if (!card) return;
+                if (card.parentNode === actorPool) return;
+                moverCard(card, actorPool);
+            });
+        }
+
+        configurarDropZones();
+        configurarPoolDrop();
+
+        agregarBtn.addEventListener('click', () => agregarActor(actorInput.value));
+        actorInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') agregarActor(actorInput.value);
+        });
+
+        document.getElementById('reiniciarBtn').addEventListener('click', function() {
+            for (let cont of Object.values(contenedores)) {
+                cont.innerHTML = '';
+            }
+            actorPool.innerHTML = '';
+            const span = document.createElement('span');
+            span.className = 'mensaje-vacio';
+            span.textContent = 'Aún no hay actores. Agrega uno arriba.';
+            actorPool.appendChild(span);
+            actualizarContadorPool();
+        });
+
+        document.getElementById('vaciarPoolBtn').addEventListener('click', function() {
+            const cards = actorPool.querySelectorAll('.actor-card');
+            cards.forEach(card => card.remove());
+            if (actorPool.children.length === 0) {
+                const span = document.createElement('span');
+                span.className = 'mensaje-vacio';
+                span.textContent = 'Aún no hay actores. Agrega uno arriba.';
+                actorPool.appendChild(span);
+            }
+            actualizarContadorPool();
+        });
+
+        actualizarContadorPool();
+
+        // Ejemplos precargados (opcional, descomentar si se desea)
+        /*
+        setTimeout(() => {
+            agregarActor('Familia');
+            agregarActor('Escuela');
+            agregarActor('Amigos');
+            agregarActor('Gobierno local');
+            agregarActor('Medios de comunicación');
+            agregarActor('Iglesia');
+        }, 100);
+        */
+    })();
+</script>
+</body>
+</html>
